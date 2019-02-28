@@ -27,7 +27,7 @@ Route::get('/', function () {
 });
 
 Route::group(['prefix' => 'admin'], function() {
-    Route::get('news/create', 'Admin\NewsController@add');
+    Route::get('news/create', 'Admin\NewsController@add')->middleware('auth');
 });
 
 Route::get('XXX', 'AAAController@bbb');
@@ -58,3 +58,7 @@ Route::group(['prefix' => 'admin'], function() {
 まとめると
 Route::get('アクセス先','ディレクトリ\コントローラー名@アクション名');
 */
+
+Auth::routes();
+
+Route::get('/home', 'HomeController@index')->name('home');
