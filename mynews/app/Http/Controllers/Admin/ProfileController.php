@@ -6,10 +6,12 @@ use App\Http\Controllers\Controller;
 
 use App\Profile;
 
+// 18章追記
+use App\ProfileHistory;
+use Carbon\Carbon;
 
 class ProfileController extends Controller
 {
-    //
   public function add()
   {
       return view('admin.profile.create');
@@ -37,22 +39,29 @@ class ProfileController extends Controller
       if (empty($profile)) {
          abort(404);
       }
-      return view('admin.profile.edit');
+      return view('admin.profile.edit', ['profile_form' => $profile]);
   }
 
 
   public function update(Request $request)
   {
       //Validation
-      $this->validation($request, Profile::$rules);
+      $this->validate($request, Profile::$rules);
       //Profile Modelからデータを取得
-      $profile = new Profile;
+      $profile = Profile::find($request->id);
       //送信されてきたフォームデータの格納
       $profile_form = $request->all();
-      unset($profile_form['_token']);
 
+      unset($profile_form['_token']);
+      unset($profile_form['remove']);
       //該当データを上書きして保存
       $profile->fill($profile_form)->save();
+
+      //18章で追記
+      $history = new ProfileHistory;
+      $history->profile_id = $profile->id;
+      $history->edited_at = Carbon::now();
+      $history->save();
 
       return redirect('admin/profile/edit');
   }

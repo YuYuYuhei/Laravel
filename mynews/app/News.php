@@ -14,10 +14,10 @@ class News extends Model
         );
 
         //追記PHP/Laravel18
-        // Newsモデルに関連付け
+        // Historyモデルに関連付け
         public function histories()
         {
-        return $this->hasMany('App\History');
+             return $this->hasMany('App\History');
         }
 
 }
